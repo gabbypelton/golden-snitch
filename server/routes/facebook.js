@@ -1,14 +1,20 @@
 import puppeteer from "puppeteer";
 import express from "express";
+import moment from "moment";
 
 const router = express.Router();
 
 router.post("/", async (req, res) => {
   try {
+    const { email, password, group, days } = req.body;
     const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-    await page.goto("https://facebook.com");
-    const { email, password } = req.body;
+    const page = await browser.newPage({
+      defaultViewport: null,
+    });
+    await page.setViewport({ width: 800, height: 1000 });
+    await page.goto("https://facebook.com", {
+      waitUntil: "networkidle2",
+    });
     await page.evaluate(
       (email, password) => {
         document.getElementById("email").value = email;
@@ -19,6 +25,17 @@ router.post("/", async (req, res) => {
       password
     );
     await page.waitForNavigation();
+    await page.goto(`https://facebook.com/groups/${group}`, {
+      waitUntil: "networkidle2",
+    });
+    await page.evaluate(() => {
+      const spans = Array.from(document.querySelectorAll("span"));
+      spans.forEach((span) => {
+        if (span.innerText.toLowerCase().includes("repl")) {
+          span.click();
+        }
+      });
+    });
     await page.screenshot({ path: "example.png" });
     await browser.close();
     res.status(200).json({ success: true });

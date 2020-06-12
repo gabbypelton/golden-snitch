@@ -20,10 +20,29 @@
   width: 50%;
 }
 
+.dashboard__form {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: space-evenly;
+  width: 100%;
+}
+
+.dashboard__toolHeading {
+  width: 100%;
+}
+
+.dashboard__input-group {
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+}
+
 .dashboard__input {
   margin: 0 2%;
   height: 25px;
   border-radius: 5px;
+  width: 70%;
 }
 
 .dashboard__button {
